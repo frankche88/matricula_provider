@@ -18,7 +18,7 @@ implements LoginScreenContract
   bool _isLoading = false;
   final formKey = new GlobalKey<FormState>();
   final scaffoldKey = new GlobalKey<ScaffoldState>();
-  String _username, _password,_email;
+  String _username, _password,_email = "frank.che88@gmail.com";
 
   LoginScreenPresenter _presenter;
 
@@ -32,11 +32,15 @@ implements LoginScreenContract
     final form = formKey.currentState;
     if (form.validate()) {
       //setState(()=> _isLoading=true);
+
       form.save();
 
-      if (!await _presenter.doLogin(_username,_password,_email)) {
+      var logged = await _presenter.doLogin(_username,_password,_email);
+
+      if (!logged) {
         onLoginError("Invalid credentials");
       } else {
+        //onLoginError("Invalid credentials");
         Navigator.of(_ctx).pushReplacementNamed("/home");
       }
 
@@ -136,7 +140,7 @@ implements LoginScreenContract
   @override
   void onLoginError(String errorTxt){
     _showSnackBar(errorTxt);
-    setState(()=> _isLoading = false);
+    //setState(()=> _isLoading = false);
   }
 
   @override

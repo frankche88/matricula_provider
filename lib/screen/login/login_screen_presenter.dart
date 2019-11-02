@@ -47,9 +47,9 @@ class LoginScreenPresenter with ChangeNotifier {
       User user = await api.login(username, password, email);
     
     
-      processLoginSuccess(user);
+      return processLoginSuccess(user);
 
-      return true;
+      //return true;
         
     }catch (e){
       _authState = AuthState.LOGGED_OUT;
@@ -62,17 +62,19 @@ class LoginScreenPresenter with ChangeNotifier {
 
   }
 
-  void processLoginSuccess(User user) async {
+  Future<bool> processLoginSuccess(User user) async {
       var loggedInUser = await userRepository.login(user);
       if (loggedInUser != null) {
         //_view.onLoginSuccess(user);
         this._authState = AuthState.LOGGED_IN;
         notifyListeners();
+        return true;
       }
       else {
         //_view.onLoginError("Invalid credentials");
-        this._authState = AuthState.AUTHENTICATING;
+        this._authState = AuthState.LOGGED_OUT;
         notifyListeners();
+        return false;
       }
   }
 }
